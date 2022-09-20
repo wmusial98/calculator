@@ -15,6 +15,7 @@ function createCalculator() {
     const resultBox = document.createElement('div');
     resultBox.classList.add('resultBox');
     calcBox.appendChild(resultBox);
+    displayResult(resultBox);
 
     const buttonBox = document.createElement('div');
     buttonBox.classList.add('buttonBox');
@@ -40,11 +41,13 @@ function clearButtons(clearBox) {
     const clearElement = document.createElement('button');
     clearElement.classList.add('clearButton');
     clearElement.textContent = 'CE';
+    clearElement.addEventListener('click', clearCurrent);
     clearBox.appendChild(clearElement);
 
     const clearAll = document.createElement('button');
     clearAll.classList.add('clearButton');
     clearAll.textContent = 'C';
+    clearAll.addEventListener('click', clearAllNums);
     clearBox.appendChild(clearAll);
 }
 
@@ -68,6 +71,7 @@ function numberButtons(numberBox) {
 }
 
 function numberButtonLayout(numberButtonList, numberBox) {
+    /* there is a specific order to appending so that the numbers wrap to look like a numpad */
     numberBox.appendChild(numberButtonList[7]);
     numberBox.appendChild(numberButtonList[8]);
     numberBox.appendChild(numberButtonList[9]);
@@ -102,4 +106,24 @@ function operatorButtons(operatorBox) {
     divButton.classList.add('operatorButton');
     divButton.textContent = '/';
     operatorBox.appendChild(divButton);
+}
+
+function clearCurrent() {
+    console.log('This button works');
+}
+
+function clearAllNums() {
+    console.log('The C button works too');
+}
+
+function displayResult(resultBox) {
+    let functionDisplay = document.createElement('div');
+    functionDisplay.classList.add('functionMsg');
+    functionDisplay.textContent = 'this is the mini function on the top';
+    resultBox.appendChild(functionDisplay);
+
+    let resultDisplay = document.createElement('div');
+    resultDisplay.classList.add('resultMsg');
+    resultDisplay.textContent = 'RESULT';
+    resultBox.appendChild(resultDisplay);
 }

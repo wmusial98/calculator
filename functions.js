@@ -53,8 +53,8 @@ let countDecimals = function (value) {
     return (Math.floor(value) === value) ? 0 : value.toString().split('.')[1].length || 0;
 }
 
-operate();
-
+/* operate();
+ */
 /* module.exports = {
     add,
     subtract,
