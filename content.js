@@ -4,34 +4,44 @@ const container = document.querySelector('.calculatorBox');
 const footer = document.querySelector('.footer');
 
 let numberButtonList = [];
+let operatorList =[];
+let displayValueOne = '';
+let displayValueTwo = '';
+let operation = '';
+let displayFunction = '';
+
+const calcBox = document.createElement('div');
+const resultBox = document.createElement('div');
+const buttonBox = document.createElement('div');
+const clearBox = document.createElement('div');
+const numberBox = document.createElement('div');
+const operatorBox = document.createElement('div');
+
+let functionDisplay = document.createElement('div');
+functionDisplay.classList.add('functionMsg');
+let resultDisplay = document.createElement('div');
+resultDisplay.classList.add('resultMsg');
 
 createCalculator();
 
 function createCalculator() {
-    const calcBox = document.createElement('div');
     calcBox.classList.add('calcBox');
     container.appendChild(calcBox);
-
-    const resultBox = document.createElement('div');
+    
     resultBox.classList.add('resultBox');
     calcBox.appendChild(resultBox);
-    displayResult(resultBox);
 
-    const buttonBox = document.createElement('div');
     buttonBox.classList.add('buttonBox');
     calcBox.appendChild(buttonBox);
 
-    const clearBox = document.createElement('div');
     clearBox.classList.add('clearBox');
     buttonBox.appendChild(clearBox);
     clearButtons(clearBox);
 
-    const numberBox = document.createElement('div');
     numberBox.classList.add('numberBox');
     buttonBox.appendChild(numberBox);
     numberButtons(numberBox);
 
-    const operatorBox = document.createElement('div');
     operatorBox.classList.add('operatorBox');
     buttonBox.appendChild(operatorBox);
     operatorButtons(operatorBox);
@@ -65,6 +75,7 @@ function numberButtons(numberBox) {
             numberButtonList[i] = document.createElement('button');
             numberButtonList[i].classList.add('numberButton');
             numberButtonList[i].textContent = i;
+            console.log(numberButtonList[i].textContent);
         }
     }
     numberButtonLayout(numberButtonList, numberBox);
@@ -84,6 +95,12 @@ function numberButtonLayout(numberButtonList, numberBox) {
     numberBox.appendChild(numberButtonList[10]);
     numberBox.appendChild(numberButtonList[0]);
     numberBox.appendChild(numberButtonList[11]);
+
+    numberButtonList.forEach(numberButton => {
+        numberButton.addEventListener('click', function(e) {
+            updateDisplay(this);
+        });
+    });
 }
 
 function operatorButtons(operatorBox) {
@@ -91,39 +108,45 @@ function operatorButtons(operatorBox) {
     addButton.classList.add('operatorButton');
     addButton.textContent = '+';
     operatorBox.appendChild(addButton);
+    addButton.addEventListener('click', function(e) {
+        updateDisplay(this);
+    });
 
     let minusButton = document.createElement('button');
     minusButton.classList.add('operatorButton');
     minusButton.textContent = '-';
     operatorBox.appendChild(minusButton);
+    minusButton.addEventListener('click', function(e) {
+        updateDisplay(this);
+    });
 
     let multButton = document.createElement('button');
     multButton.classList.add('operatorButton');
     multButton.textContent = 'x';
     operatorBox.appendChild(multButton);
+    multButton.addEventListener('click', function(e) {
+        updateDisplay(this);
+    });
 
     let divButton = document.createElement('button');
     divButton.classList.add('operatorButton');
     divButton.textContent = '/';
     operatorBox.appendChild(divButton);
+    divButton.addEventListener('click', function(e) {
+        updateDisplay(this);
+    });
+}
+
+function updateDisplay(clicked) {
+    functionDisplay.textContent += clicked.textContent;
+    resultBox.append(functionDisplay);
 }
 
 function clearCurrent() {
-    console.log('This button works');
+    functionDisplay.textContent = '';
+    resultBox.appendChild(functionDisplay);
 }
 
 function clearAllNums() {
     console.log('The C button works too');
-}
-
-function displayResult(resultBox) {
-    let functionDisplay = document.createElement('div');
-    functionDisplay.classList.add('functionMsg');
-    functionDisplay.textContent = 'this is the mini function on the top';
-    resultBox.appendChild(functionDisplay);
-
-    let resultDisplay = document.createElement('div');
-    resultDisplay.classList.add('resultMsg');
-    resultDisplay.textContent = 'RESULT';
-    resultBox.appendChild(resultDisplay);
 }
