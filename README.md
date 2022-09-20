@@ -8,3 +8,6 @@ This README file is both a way of documenting my learning process as well as kee
 
 ## Testing
 It bothered me a bit that The Odin Project skimmed over creating and managing json files and jest tests and so I decided to implement them myself. I can see why The Odin Project skimmed this part. I originally tried running `npm test functions.spec.js` and ran into a error `ENOENT: no such file or directory, open '/Users/wiktoriamusial/repos/calculator/package.json'` - I had to install node into the root directory of my project. After, I installed node and jest into the root file of my directory, and I manually changed the test script to `jest` in the package.json file.
+
+## Styling
+Styling is pretty standard - flexbox, a combination of columns in nested divs, and a flex-wrap on the nummber buttons leads to the desired layout. The main difference is that I did all of my content creation with DOM manipulation - hopefully this will not lead to any problems when I am using multiple JS files together. I imported the Raleway font from Google's open source fonts. I noticed that this slows the page down on initial load.
