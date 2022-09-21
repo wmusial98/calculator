@@ -5,10 +5,9 @@ const footer = document.querySelector('.footer');
 
 let numberButtonList = [];
 let operatorList =[];
-let displayValueOne = '';
-let displayValueTwo = '';
 let operation = '';
 let displayFunction = '';
+let evalString = '';
 
 const calcBox = document.createElement('div');
 const resultBox = document.createElement('div');
@@ -75,7 +74,6 @@ function numberButtons(numberBox) {
             numberButtonList[i] = document.createElement('button');
             numberButtonList[i].classList.add('numberButton');
             numberButtonList[i].textContent = i;
-            console.log(numberButtonList[i].textContent);
         }
     }
     numberButtonLayout(numberButtonList, numberBox);
@@ -98,7 +96,11 @@ function numberButtonLayout(numberButtonList, numberBox) {
 
     numberButtonList.forEach(numberButton => {
         numberButton.addEventListener('click', function(e) {
-            updateDisplay(this);
+            if(numberButton.textContent == '=') {
+                doTheMath();
+            } else {
+                updateDisplay(this);
+            }
         });
     });
 }
@@ -109,6 +111,7 @@ function operatorButtons(operatorBox) {
     addButton.textContent = '+';
     operatorBox.appendChild(addButton);
     addButton.addEventListener('click', function(e) {
+        operation = 'add';
         updateDisplay(this);
     });
 
@@ -117,6 +120,7 @@ function operatorButtons(operatorBox) {
     minusButton.textContent = '-';
     operatorBox.appendChild(minusButton);
     minusButton.addEventListener('click', function(e) {
+        operation = 'subtract';
         updateDisplay(this);
     });
 
@@ -125,6 +129,7 @@ function operatorButtons(operatorBox) {
     multButton.textContent = 'x';
     operatorBox.appendChild(multButton);
     multButton.addEventListener('click', function(e) {
+        operation = 'multiply';
         updateDisplay(this);
     });
 
@@ -133,13 +138,19 @@ function operatorButtons(operatorBox) {
     divButton.textContent = '/';
     operatorBox.appendChild(divButton);
     divButton.addEventListener('click', function(e) {
+        operation = 'divide';
         updateDisplay(this);
     });
 }
 
-function updateDisplay(clicked) {
-    functionDisplay.textContent += clicked.textContent;
+function doTheMath() {
+    console.log(evalString);
+}
+
+function updateDisplay(e) {
+    functionDisplay.textContent += e.textContent;
     resultBox.append(functionDisplay);
+    evalString = functionDisplay.textContent;
 }
 
 function clearCurrent() {
