@@ -7,7 +7,12 @@ let numberButtonList = [];
 let operatorList =[];
 let operation = '';
 let displayFunction = '';
+let oldDisplayFunction ='';
 let evalString = '';
+let calcValues = [];
+let firstVal = 0;
+let secondVal = 0;
+let result = 0;
 
 const calcBox = document.createElement('div');
 const resultBox = document.createElement('div');
@@ -24,29 +29,29 @@ resultDisplay.classList.add('resultMsg');
 createCalculator();
 
 function createCalculator() {
-    calcBox.classList.add('calcBox');
+/*     calcBox.classList.add('calcBox');
     container.appendChild(calcBox);
     
     resultBox.classList.add('resultBox');
     calcBox.appendChild(resultBox);
 
     buttonBox.classList.add('buttonBox');
-    calcBox.appendChild(buttonBox);
+    calcBox.appendChild(buttonBox); */
 
-    clearBox.classList.add('clearBox');
+    /* clearBox.classList.add('clearBox');
     buttonBox.appendChild(clearBox);
-    clearButtons(clearBox);
+    clearButtons(clearBox); */
 
-    numberBox.classList.add('numberBox');
+   /*  numberBox.classList.add('numberBox');
     buttonBox.appendChild(numberBox);
-    numberButtons(numberBox);
+    numberButtons(numberBox); */
 
     operatorBox.classList.add('operatorBox');
     buttonBox.appendChild(operatorBox);
     operatorButtons(operatorBox);
 }
 
-function clearButtons(clearBox) {
+/* function clearButtons(clearBox) {
     const clearElement = document.createElement('button');
     clearElement.classList.add('clearButton');
     clearElement.textContent = 'CE';
@@ -58,8 +63,8 @@ function clearButtons(clearBox) {
     clearAll.textContent = 'C';
     clearAll.addEventListener('click', clearAllNums);
     clearBox.appendChild(clearAll);
-}
-
+} */
+/* 
 function numberButtons(numberBox) {
     for(let i = 0; i < 12; i++) {
         if(i == 10) {
@@ -80,7 +85,7 @@ function numberButtons(numberBox) {
 }
 
 function numberButtonLayout(numberButtonList, numberBox) {
-    /* there is a specific order to appending so that the numbers wrap to look like a numpad */
+there is a specific order to appending so that the numbers wrap to look like a numpad
     numberBox.appendChild(numberButtonList[7]);
     numberBox.appendChild(numberButtonList[8]);
     numberBox.appendChild(numberButtonList[9]);
@@ -93,7 +98,7 @@ function numberButtonLayout(numberButtonList, numberBox) {
     numberBox.appendChild(numberButtonList[10]);
     numberBox.appendChild(numberButtonList[0]);
     numberBox.appendChild(numberButtonList[11]);
-
+ */
     numberButtonList.forEach(numberButton => {
         numberButton.addEventListener('click', function(e) {
             if(numberButton.textContent == '=') {
@@ -111,7 +116,7 @@ function operatorButtons(operatorBox) {
     addButton.textContent = '+';
     operatorBox.appendChild(addButton);
     addButton.addEventListener('click', function(e) {
-        operation = 'add';
+        operation = '+';
         updateDisplay(this);
     });
 
@@ -120,7 +125,7 @@ function operatorButtons(operatorBox) {
     minusButton.textContent = '-';
     operatorBox.appendChild(minusButton);
     minusButton.addEventListener('click', function(e) {
-        operation = 'subtract';
+        operation = '-';
         updateDisplay(this);
     });
 
@@ -129,7 +134,7 @@ function operatorButtons(operatorBox) {
     multButton.textContent = 'x';
     operatorBox.appendChild(multButton);
     multButton.addEventListener('click', function(e) {
-        operation = 'multiply';
+        operation = 'x';
         updateDisplay(this);
     });
 
@@ -138,13 +143,9 @@ function operatorButtons(operatorBox) {
     divButton.textContent = '/';
     operatorBox.appendChild(divButton);
     divButton.addEventListener('click', function(e) {
-        operation = 'divide';
+        operation = '/';
         updateDisplay(this);
     });
-}
-
-function doTheMath() {
-    console.log(evalString);
 }
 
 function updateDisplay(e) {
@@ -153,11 +154,76 @@ function updateDisplay(e) {
     evalString = functionDisplay.textContent;
 }
 
+function doTheMath() {
+    calcValues = evalString.split(operation);
+    firstVal = calcValues[0];
+    secondVal = calcValues[1];
+    operate(firstVal, secondVal);
+    updateResult();
+}
+
+const operate = function (first, second) {
+    if (operation == '+') {
+        add(+first,+second);
+    } else if (operation == '-') {
+        subtract(+first,+second);
+    } else if (operation == 'x') {
+        multiply(+first,+second);
+    } else if (operation == '/') {
+        divide(+first,+second);
+    }
+}
+
+const add = function (a, b) {
+    /* return (countDecimals(a) < (2 || undefined) && countDecimals(b) < (2 || undefined)) ? a+b : 'ERROR'; */
+    result = (countDecimals(a) < (2 || undefined) && countDecimals(b) < (2 || undefined)) ? a + b : 'ERROR';
+    console.log(result);
+};
+
+const subtract = function (a, b) {
+    /* return (countDecimals(a) < (2 || undefined) && countDecimals(b) < (2 || undefined)) ? a-b : 'ERROR'; */
+    result = (countDecimals(a) < (2 || undefined) && countDecimals(b) < (2 || undefined)) ? a - b : 'ERROR';
+    console.log(result);
+};
+
+const multiply = function (a, b) {
+    /* return (countDecimals(a) < (2 || undefined) && countDecimals(b) < (2 || undefined)) ? a*b : 'ERROR'; */
+    result = (countDecimals(a) < (2 || undefined) && countDecimals(b) < (2 || undefined)) ? a * b : 'ERROR';
+    console.log(result);
+};
+
+const divide = function (a, b) {
+    if (b == 0) {
+        result = 'ERROR';
+    } else {
+        result = (countDecimals(a) < (2 || undefined) && countDecimals(b) < (2 || undefined)) ? a / b : 'ERROR';
+        result = Math.round(result * 1000) / 1000;
+        console.log(result);
+    }
+};
+
+let countDecimals = function (value) {
+    return (Math.floor(value) === value) ? 0 : value.toString().split('.')[1].length || 0;
+}
+
 function clearCurrent() {
-    functionDisplay.textContent = '';
-    resultBox.appendChild(functionDisplay);
+    functionDisplay.textContent = functionDisplay.textContent.slice(0,-1);
 }
 
 function clearAllNums() {
-    console.log('The C button works too');
+    functionDisplay.textContent = '';
+    resultDisplay.textContent = '';
+    firstVal = 0;
+    secondVal = 0;
+    result = 0;
+    operation = '';
+}
+
+function updateResult() {
+    oldDisplayFunction = functionDisplay.textContent;
+    functionDisplay.textContent = oldDisplayFunction;
+    resultBox.append(functionDisplay);
+
+    resultDisplay.textContent = result;
+    resultBox.append(resultDisplay);
 }

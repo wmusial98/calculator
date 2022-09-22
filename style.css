@@ -14,11 +14,14 @@ button {
     border: 0px;
 }
 
-.calculatorBox {
+.calculator {
     height: 435px;
     width: 535px;
     margin: auto;
     border: 1px solid;
+    display: flex;
+    flex-direction: column;
+    width: 530px;
 }
 
 .clearButton {
@@ -41,13 +44,7 @@ button {
     border: 0px;
 }
 
-.calcBox {
-    display: flex;
-    flex-direction: column;
-    width: 530px;
-}
-
-.resultBox{
+.result {
     width: 515px;
     height: 70px;
     background-color: lightgray;
@@ -63,7 +60,7 @@ button {
     font-size: 32px;
 }
 
-.buttonBox {
+.input {
     display: flex;
 }
 
