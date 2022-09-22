@@ -1,116 +1,70 @@
-/* const { clear } = require("console"); */
+let numberButtons = document.querySelectorAll('.numberButton');
+let decimalButton = document.querySelector('.decimalButton');
+let operatorButtons = document.querySelectorAll('.operatorButton');
+let equalsButton = document.querySelector('.equalsButton');
 
-const container = document.querySelector('.calculatorBox');
-const footer = document.querySelector('.footer');
+let num1 = '';
+let num2 = '';
+let operator = '';
+let stringIterator = '';
 
-let numberButtonList = [];
-let operatorList =[];
-let operation = '';
-let displayFunction = '';
-let oldDisplayFunction ='';
-let evalString = '';
-let calcValues = [];
-let firstVal = 0;
-let secondVal = 0;
-let result = 0;
+initializeButtons();
 
-const calcBox = document.createElement('div');
-const resultBox = document.createElement('div');
-const buttonBox = document.createElement('div');
-const clearBox = document.createElement('div');
-const numberBox = document.createElement('div');
-const operatorBox = document.createElement('div');
-
-let functionDisplay = document.createElement('div');
-functionDisplay.classList.add('functionMsg');
-let resultDisplay = document.createElement('div');
-resultDisplay.classList.add('resultMsg');
-
-createCalculator();
-
-function createCalculator() {
-/*     calcBox.classList.add('calcBox');
-    container.appendChild(calcBox);
-    
-    resultBox.classList.add('resultBox');
-    calcBox.appendChild(resultBox);
-
-    buttonBox.classList.add('buttonBox');
-    calcBox.appendChild(buttonBox); */
-
-    /* clearBox.classList.add('clearBox');
-    buttonBox.appendChild(clearBox);
-    clearButtons(clearBox); */
-
-   /*  numberBox.classList.add('numberBox');
-    buttonBox.appendChild(numberBox);
-    numberButtons(numberBox); */
-
-    operatorBox.classList.add('operatorBox');
-    buttonBox.appendChild(operatorBox);
-    operatorButtons(operatorBox);
-}
-
-/* function clearButtons(clearBox) {
-    const clearElement = document.createElement('button');
-    clearElement.classList.add('clearButton');
-    clearElement.textContent = 'CE';
-    clearElement.addEventListener('click', clearCurrent);
-    clearBox.appendChild(clearElement);
-
-    const clearAll = document.createElement('button');
-    clearAll.classList.add('clearButton');
-    clearAll.textContent = 'C';
-    clearAll.addEventListener('click', clearAllNums);
-    clearBox.appendChild(clearAll);
-} */
-/* 
-function numberButtons(numberBox) {
-    for(let i = 0; i < 12; i++) {
-        if(i == 10) {
-            numberButtonList[i] = document.createElement('button');
-            numberButtonList[i].classList.add('decimalButton');
-            numberButtonList[i].textContent = '.';
-        } else if (i == 11) {
-            numberButtonList[i] = document.createElement('button');
-            numberButtonList[i].classList.add('equalsButton');
-            numberButtonList[i].textContent = '=';
-        } else{
-            numberButtonList[i] = document.createElement('button');
-            numberButtonList[i].classList.add('numberButton');
-            numberButtonList[i].textContent = i;
-        }
-    }
-    numberButtonLayout(numberButtonList, numberBox);
-}
-
-function numberButtonLayout(numberButtonList, numberBox) {
-there is a specific order to appending so that the numbers wrap to look like a numpad
-    numberBox.appendChild(numberButtonList[7]);
-    numberBox.appendChild(numberButtonList[8]);
-    numberBox.appendChild(numberButtonList[9]);
-    numberBox.appendChild(numberButtonList[4]);
-    numberBox.appendChild(numberButtonList[5]);
-    numberBox.appendChild(numberButtonList[6]);
-    numberBox.appendChild(numberButtonList[1]);
-    numberBox.appendChild(numberButtonList[2]);
-    numberBox.appendChild(numberButtonList[3]);
-    numberBox.appendChild(numberButtonList[10]);
-    numberBox.appendChild(numberButtonList[0]);
-    numberBox.appendChild(numberButtonList[11]);
- */
-    numberButtonList.forEach(numberButton => {
-        numberButton.addEventListener('click', function(e) {
-            if(numberButton.textContent == '=') {
-                doTheMath();
-            } else {
-                updateDisplay(this);
-            }
+function initializeButtons() {
+    numberButtons.forEach(numberButton => numberButton.addEventListener('click', updateFunction));
+    decimalButton.addEventListener('click', updateFunction);
+    operatorButtons.forEach(operatorButton => {
+        operatorButton.addEventListener('click', function (e) {
+            operator = this.textContent;
         });
+    });
+
+    equalsButton.addEventListener('click', function (e) {
     });
 }
 
-function operatorButtons(operatorBox) {
+function updateFunction(element) {
+    stringIterator = this.textContent;
+    operator ? addToNumber('two', stringIterator) : addToNumber('one', stringIterator);
+}
+
+function addToNumber(numToFill, addVal) {
+    if (checkDecimals(numToFill)) {
+        numToFill == 'one' ? num1 += addVal : num2 += addVal;
+        console.log(num1 + operator + num2);
+    } else {
+        return;
+    }
+}
+
+function checkDecimals(numCheck) {
+    let i, j;
+    if (numCheck == 'one') {
+        if (num1.includes('.')) {
+            i = num1.length;
+            j = num1.indexOf('.');
+            return (i - j < 4) ? true : false; /* true = decimals can be added */
+        } else {
+            return true;
+        }
+    } else {
+        i = num2.length;
+        j = num2.indexOf('.');
+        return (i - j < 4) ? true : false;
+    }
+}
+    /* numberButtonList.forEach(numberButton => {
+    numberButton.addEventListener('click', function(e) {
+        if(numberButton.textContent == '=') {
+            doTheMath();
+        } else {
+            updateDisplay(this);
+        }
+    });
+});
+} */
+
+/* function operatorButtons(operatorBox) {
     let addButton = document.createElement('button');
     addButton.classList.add('operatorButton');
     addButton.textContent = '+';
@@ -175,19 +129,16 @@ const operate = function (first, second) {
 }
 
 const add = function (a, b) {
-    /* return (countDecimals(a) < (2 || undefined) && countDecimals(b) < (2 || undefined)) ? a+b : 'ERROR'; */
     result = (countDecimals(a) < (2 || undefined) && countDecimals(b) < (2 || undefined)) ? a + b : 'ERROR';
     console.log(result);
 };
 
 const subtract = function (a, b) {
-    /* return (countDecimals(a) < (2 || undefined) && countDecimals(b) < (2 || undefined)) ? a-b : 'ERROR'; */
     result = (countDecimals(a) < (2 || undefined) && countDecimals(b) < (2 || undefined)) ? a - b : 'ERROR';
     console.log(result);
 };
 
 const multiply = function (a, b) {
-    /* return (countDecimals(a) < (2 || undefined) && countDecimals(b) < (2 || undefined)) ? a*b : 'ERROR'; */
     result = (countDecimals(a) < (2 || undefined) && countDecimals(b) < (2 || undefined)) ? a * b : 'ERROR';
     console.log(result);
 };
@@ -226,4 +177,4 @@ function updateResult() {
 
     resultDisplay.textContent = result;
     resultBox.append(resultDisplay);
-}
+} */
