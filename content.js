@@ -16,25 +16,21 @@ let stringIterator = '';
 
 initializeButtons();
 
-document.addEventListener('keydown', keyPress);
-
-function keyPress(element) {
-    console.log(`${element.key}`);
-}
-
 function initializeButtons() {
     displayFunction.textContent = staticFunction;
     numberButtons.forEach(numberButton => numberButton.addEventListener('click', updateFunction));
     decimalButton.addEventListener('click', updateFunctionDecimal);
     operatorButtons.forEach(operatorButton => {
-        operatorButton.addEventListener('click', function (e) {
-            operator = this.textContent;
-            displayFunction.textContent = num1 + operator + num2;
-        });
+        operatorButton.addEventListener('click', operatorChange);
     });
     equalsButton.addEventListener('click', evaluate);
     clearAllButton.addEventListener('click', clearAll);
     clearElementButton.addEventListener('click', clearElement);
+}
+
+function operatorChange(element) {
+    operator = this.textContent;
+    displayFunction.textContent = num1 + operator + num2;
 }
 
 function updateFunction(element) {
@@ -183,4 +179,22 @@ function clearElement() {
         num1 = '';
     }
     displayFunction.textContent = num1 + operator + num2;
+}
+
+document.addEventListener('keydown', keyPress);
+
+function keyPress(element) {
+    let operatorList = ['+', '-', '*', '/'];
+    if(!isNaN(element.key) || element.key == '.') {
+        document.getElementById(`${element.key}`).click();
+    } else if (operatorList.includes(element.key)) {
+        operator = `${element.key}`;
+        displayFunction.textContent = num1 + operator + num2;
+    } else if (element.key === 'c' || element.key === 'C') {
+        clearAll();
+    } else if (element.key === '=' || element.key === 'Enter') {
+        evaluate();
+    } else if (element.key === 'Backspace') {
+        clearElement();
+    }
 }
