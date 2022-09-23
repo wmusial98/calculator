@@ -17,3 +17,10 @@ I think that creating every HTML element dynamically was a bit ambitious (in nic
 
 ## Back to Where I Left Off (And Some)
 At the end of the day of second pass, I was back to where I started with a cleaner file. I was able to implement a check that limited the number of decimal places the user could input before being unable to make more changes, added new logic so I didn't have to split a string to do calculations, and clear buttons. 
+
+## End of Calculation Logic + Keyboard Support + Final Thoughts
+The pitfall I ran into with the main branch (and DOM manipulation) was that I was unable to pass the result of an expression back to the first number and then use that number in a subsequent calculation. With a cleaner file, I was able to code the entire script with functional programming - something I wasn't able to do while creating elements in JS. 
+
+Keyboard support, while at first difficult, was easy to figure out once I `console.log(`${element.key}`)` on a keypress event helped me figure out the logic for pulling keyboard inputs. While not all of the functionality of the keyboard is exactly the same as using the on-screen keyboard (mainly, you can pass the result of the expression to the first number, but the second number is instead input into the first). I decided to leave it and move on. I suspect that a lack of clearing variable values in the operator keypress logic is causing the bug.
+
+Final Thoughts: Just use HTML 
