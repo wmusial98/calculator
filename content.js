@@ -2,6 +2,12 @@ let numberButtons = document.querySelectorAll('.numberButton');
 let decimalButton = document.querySelector('.decimalButton');
 let operatorButtons = document.querySelectorAll('.operatorButton');
 let equalsButton = document.querySelector('.equalsButton');
+let clearAllButton = document.querySelector('.clearAllButton');
+let clearElementButton = document.querySelector('.clearElementButton');
+let displayFunction = document.querySelector('.displayFunction');
+let displayResult = document.querySelector('.displayResult');
+let result;
+let staticFunction = '';
 
 let num1 = '';
 let num2 = '';
@@ -11,16 +17,18 @@ let stringIterator = '';
 initializeButtons();
 
 function initializeButtons() {
+    displayFunction.textContent = staticFunction;
     numberButtons.forEach(numberButton => numberButton.addEventListener('click', updateFunction));
-    decimalButton.addEventListener('click', updateFunction);
+    decimalButton.addEventListener('click', updateFunctionDecimal);
     operatorButtons.forEach(operatorButton => {
         operatorButton.addEventListener('click', function (e) {
             operator = this.textContent;
+            displayFunction.textContent = num1 + operator + num2;
         });
     });
-
-    equalsButton.addEventListener('click', function (e) {
-    });
+    equalsButton.addEventListener('click', evaluate);
+    clearAllButton.addEventListener('click', clearAll);
+    clearElementButton.addEventListener('click', clearElement);
 }
 
 function updateFunction(element) {
@@ -28,10 +36,28 @@ function updateFunction(element) {
     operator ? addToNumber('two', stringIterator) : addToNumber('one', stringIterator);
 }
 
+function updateFunctionDecimal(element) {
+    if(operator) {
+        if(num2.includes('.')) {
+            return;
+        } else {
+            stringIterator = this.textContent;
+            operator ? addToNumber('two', stringIterator) : addToNumber('one', stringIterator);
+        }
+    } else {
+        if(num1.includes('.')) {
+            return;
+        } else {
+            stringIterator = this.textContent;
+            operator ? addToNumber('two', stringIterator) : addToNumber('one', stringIterator);
+        }
+    }
+}
+
 function addToNumber(numToFill, addVal) {
     if (checkDecimals(numToFill)) {
         numToFill == 'one' ? num1 += addVal : num2 += addVal;
-        console.log(num1 + operator + num2);
+        displayFunction.textContent = num1 + operator + num2;
     } else {
         return;
     }
@@ -48,133 +74,77 @@ function checkDecimals(numCheck) {
             return true;
         }
     } else {
-        i = num2.length;
-        j = num2.indexOf('.');
-        return (i - j < 4) ? true : false;
-    }
-}
-    /* numberButtonList.forEach(numberButton => {
-    numberButton.addEventListener('click', function(e) {
-        if(numberButton.textContent == '=') {
-            doTheMath();
-        } else {
-            updateDisplay(this);
-        }
-    });
-});
-} */
-
-/* function operatorButtons(operatorBox) {
-    let addButton = document.createElement('button');
-    addButton.classList.add('operatorButton');
-    addButton.textContent = '+';
-    operatorBox.appendChild(addButton);
-    addButton.addEventListener('click', function(e) {
-        operation = '+';
-        updateDisplay(this);
-    });
-
-    let minusButton = document.createElement('button');
-    minusButton.classList.add('operatorButton');
-    minusButton.textContent = '-';
-    operatorBox.appendChild(minusButton);
-    minusButton.addEventListener('click', function(e) {
-        operation = '-';
-        updateDisplay(this);
-    });
-
-    let multButton = document.createElement('button');
-    multButton.classList.add('operatorButton');
-    multButton.textContent = 'x';
-    operatorBox.appendChild(multButton);
-    multButton.addEventListener('click', function(e) {
-        operation = 'x';
-        updateDisplay(this);
-    });
-
-    let divButton = document.createElement('button');
-    divButton.classList.add('operatorButton');
-    divButton.textContent = '/';
-    operatorBox.appendChild(divButton);
-    divButton.addEventListener('click', function(e) {
-        operation = '/';
-        updateDisplay(this);
-    });
-}
-
-function updateDisplay(e) {
-    functionDisplay.textContent += e.textContent;
-    resultBox.append(functionDisplay);
-    evalString = functionDisplay.textContent;
-}
-
-function doTheMath() {
-    calcValues = evalString.split(operation);
-    firstVal = calcValues[0];
-    secondVal = calcValues[1];
-    operate(firstVal, secondVal);
-    updateResult();
-}
-
-const operate = function (first, second) {
-    if (operation == '+') {
-        add(+first,+second);
-    } else if (operation == '-') {
-        subtract(+first,+second);
-    } else if (operation == 'x') {
-        multiply(+first,+second);
-    } else if (operation == '/') {
-        divide(+first,+second);
+        if (num2.includes('.')) {
+            i = num2.length;
+            j = num2.indexOf('.');
+            return (i - j < 4) ? true : false;
+        } else { return true; }
     }
 }
 
-const add = function (a, b) {
-    result = (countDecimals(a) < (2 || undefined) && countDecimals(b) < (2 || undefined)) ? a + b : 'ERROR';
-    console.log(result);
+function evaluate() {
+    switch (operator) {
+        case '+': 
+            add(+num1,+num2);
+            break;
+        case '-':
+            subtract(+num1,+num2);
+            break;
+        case '*':
+            multiply(+num1,+num2);
+            break;
+        case '/':
+            divide(+num1,+num2);
+            break;
+    }
+    displayResult.textContent = result;
+    resultBridge();
+}
+
+function add(a, b) {
+    result = a + b;
 };
 
-const subtract = function (a, b) {
-    result = (countDecimals(a) < (2 || undefined) && countDecimals(b) < (2 || undefined)) ? a - b : 'ERROR';
-    console.log(result);
+function subtract(a, b) {
+    result = a - b;
 };
 
-const multiply = function (a, b) {
-    result = (countDecimals(a) < (2 || undefined) && countDecimals(b) < (2 || undefined)) ? a * b : 'ERROR';
-    console.log(result);
+function multiply(a, b) {
+    result = a * b;
 };
 
-const divide = function (a, b) {
+function divide(a, b) {
     if (b == 0) {
         result = 'ERROR';
     } else {
-        result = (countDecimals(a) < (2 || undefined) && countDecimals(b) < (2 || undefined)) ? a / b : 'ERROR';
+        result = a / b
         result = Math.round(result * 1000) / 1000;
-        console.log(result);
     }
 };
 
-let countDecimals = function (value) {
-    return (Math.floor(value) === value) ? 0 : value.toString().split('.')[1].length || 0;
+function resultBridge() {
+    /* this is where i write code to pass the result to num1 or to 
+    clear the calculator or start over again */
 }
 
-function clearCurrent() {
-    functionDisplay.textContent = functionDisplay.textContent.slice(0,-1);
+function clearAll() {
+    result = '';
+    displayResult.textContent = result;
+    staticFunction = '';
+    num1 = '';
+    num2 = '';
+    operator = '';
+    stringIterator = '';
+    initializeButtons();
 }
 
-function clearAllNums() {
-    functionDisplay.textContent = '';
-    resultDisplay.textContent = '';
-    firstVal = 0;
-    secondVal = 0;
-    result = 0;
-    operation = '';
+function clearElement() {
+    if(num2) {
+        num2 = '';
+    } else if(operator) {
+        operator = '';
+    } else {
+        num1 = '';
+    }
+    displayFunction.textContent = num1 + operator + num2;
 }
-
-function updateResult() {
-    oldDisplayFunction = functionDisplay.textContent;
-    functionDisplay.textContent = oldDisplayFunction;
-    resultBox.append(functionDisplay);
-
-    resultDisplay.textContent = result;
-    resultBox.append(resultDisplay);
-} */

@@ -24,7 +24,7 @@ button {
     width: 530px;
 }
 
-.clearButton {
+.clear {
     width: 70px;
     height: 160px;
     background-color: #CDDECF;
@@ -51,12 +51,12 @@ button {
     margin: 10px 5px 5px 10px;
 }
 
-.functionMsg, .resultMsg {
+.displayFunction, .displayResult {
     text-align: right;
     margin: 3px;
 }
 
-.resultMsg {
+.displayResult {
     font-size: 32px;
 }
 
