@@ -16,6 +16,12 @@ let stringIterator = '';
 
 initializeButtons();
 
+document.addEventListener('keydown', keyPress);
+
+function keyPress(element) {
+    console.log(`${element.key}`);
+}
+
 function initializeButtons() {
     displayFunction.textContent = staticFunction;
     numberButtons.forEach(numberButton => numberButton.addEventListener('click', updateFunction));
@@ -83,22 +89,27 @@ function checkDecimals(numCheck) {
 }
 
 function evaluate() {
-    switch (operator) {
-        case '+': 
-            add(+num1,+num2);
-            break;
-        case '-':
-            subtract(+num1,+num2);
-            break;
-        case '*':
-            multiply(+num1,+num2);
-            break;
-        case '/':
-            divide(+num1,+num2);
-            break;
+    if (num1 && num2) {
+        switch (operator) {
+            case '+':
+                add(+num1, +num2);
+                break;
+            case '-':
+                subtract(+num1, +num2);
+                break;
+            case '*':
+                multiply(+num1, +num2);
+                break;
+            case '/':
+                divide(+num1, +num2);
+                break;
+        }
+        displayResult.textContent = result;
+        resultBridge();
+    } else {
+        result = 'Use 2 numbers & an operator';
+        displayResult.textContent = result;
     }
-    displayResult.textContent = result;
-    resultBridge();
 }
 
 function add(a, b) {
@@ -123,8 +134,33 @@ function divide(a, b) {
 };
 
 function resultBridge() {
-    /* this is where i write code to pass the result to num1 or to 
-    clear the calculator or start over again */
+    numberButtons.forEach(numberButton => numberButton.addEventListener('click', clearAllEquation));
+    operatorButtons.forEach(operatorButton => operatorButton.addEventListener('click', useResultInCalc));
+}
+
+function clearAllEquation(element) {
+    result = '';
+    displayResult.textContent = result;
+    staticFunction = '';
+    num1 ='';
+    num2 = '';
+    operator = '';
+    stringIterator = this.textContent;
+    addToNumber('one', stringIterator);
+    numberButtons.forEach(numberButton => numberButton.removeEventListener('click', clearAllEquation));
+    operatorButtons.forEach(operatorButton => operatorButton.removeEventListener('click', useResultInCalc));
+}
+
+function useResultInCalc(element) {
+    num1 = result;
+    num2 = '';
+    operator = this.textContent;
+    result = '';
+    displayResult.textContent = '';
+    displayFunction.textContent = num1 + operator + num2;
+    staticFunction = '';
+    numberButtons.forEach(numberButton => numberButton.removeEventListener('click', clearAllEquation));
+    operatorButtons.forEach(operatorButton => operatorButton.removeEventListener('click', useResultInCalc));
 }
 
 function clearAll() {
