@@ -1,163 +1,200 @@
-/* const { clear } = require("console"); */
+let numberButtons = document.querySelectorAll('.numberButton');
+let decimalButton = document.querySelector('.decimalButton');
+let operatorButtons = document.querySelectorAll('.operatorButton');
+let equalsButton = document.querySelector('.equalsButton');
+let clearAllButton = document.querySelector('.clearAllButton');
+let clearElementButton = document.querySelector('.clearElementButton');
+let displayFunction = document.querySelector('.displayFunction');
+let displayResult = document.querySelector('.displayResult');
+let result;
+let staticFunction = '';
 
-const container = document.querySelector('.calculatorBox');
-const footer = document.querySelector('.footer');
+let num1 = '';
+let num2 = '';
+let operator = '';
+let stringIterator = '';
 
-let numberButtonList = [];
-let operatorList =[];
-let operation = '';
-let displayFunction = '';
-let evalString = '';
+initializeButtons();
 
-const calcBox = document.createElement('div');
-const resultBox = document.createElement('div');
-const buttonBox = document.createElement('div');
-const clearBox = document.createElement('div');
-const numberBox = document.createElement('div');
-const operatorBox = document.createElement('div');
-
-let functionDisplay = document.createElement('div');
-functionDisplay.classList.add('functionMsg');
-let resultDisplay = document.createElement('div');
-resultDisplay.classList.add('resultMsg');
-
-createCalculator();
-
-function createCalculator() {
-    calcBox.classList.add('calcBox');
-    container.appendChild(calcBox);
-    
-    resultBox.classList.add('resultBox');
-    calcBox.appendChild(resultBox);
-
-    buttonBox.classList.add('buttonBox');
-    calcBox.appendChild(buttonBox);
-
-    clearBox.classList.add('clearBox');
-    buttonBox.appendChild(clearBox);
-    clearButtons(clearBox);
-
-    numberBox.classList.add('numberBox');
-    buttonBox.appendChild(numberBox);
-    numberButtons(numberBox);
-
-    operatorBox.classList.add('operatorBox');
-    buttonBox.appendChild(operatorBox);
-    operatorButtons(operatorBox);
+function initializeButtons() {
+    displayFunction.textContent = staticFunction;
+    numberButtons.forEach(numberButton => numberButton.addEventListener('click', updateFunction));
+    decimalButton.addEventListener('click', updateFunctionDecimal);
+    operatorButtons.forEach(operatorButton => {
+        operatorButton.addEventListener('click', operatorChange);
+    });
+    equalsButton.addEventListener('click', evaluate);
+    clearAllButton.addEventListener('click', clearAll);
+    clearElementButton.addEventListener('click', clearElement);
 }
 
-function clearButtons(clearBox) {
-    const clearElement = document.createElement('button');
-    clearElement.classList.add('clearButton');
-    clearElement.textContent = 'CE';
-    clearElement.addEventListener('click', clearCurrent);
-    clearBox.appendChild(clearElement);
-
-    const clearAll = document.createElement('button');
-    clearAll.classList.add('clearButton');
-    clearAll.textContent = 'C';
-    clearAll.addEventListener('click', clearAllNums);
-    clearBox.appendChild(clearAll);
+function operatorChange(element) {
+    operator = this.textContent;
+    displayFunction.textContent = num1 + operator + num2;
 }
 
-function numberButtons(numberBox) {
-    for(let i = 0; i < 12; i++) {
-        if(i == 10) {
-            numberButtonList[i] = document.createElement('button');
-            numberButtonList[i].classList.add('decimalButton');
-            numberButtonList[i].textContent = '.';
-        } else if (i == 11) {
-            numberButtonList[i] = document.createElement('button');
-            numberButtonList[i].classList.add('equalsButton');
-            numberButtonList[i].textContent = '=';
-        } else{
-            numberButtonList[i] = document.createElement('button');
-            numberButtonList[i].classList.add('numberButton');
-            numberButtonList[i].textContent = i;
+function updateFunction(element) {
+    stringIterator = this.textContent;
+    operator ? addToNumber('two', stringIterator) : addToNumber('one', stringIterator);
+}
+
+function updateFunctionDecimal(element) {
+    if(operator) {
+        if(num2.includes('.')) {
+            return;
+        } else {
+            stringIterator = this.textContent;
+            operator ? addToNumber('two', stringIterator) : addToNumber('one', stringIterator);
+        }
+    } else {
+        if(num1.includes('.')) {
+            return;
+        } else {
+            stringIterator = this.textContent;
+            operator ? addToNumber('two', stringIterator) : addToNumber('one', stringIterator);
         }
     }
-    numberButtonLayout(numberButtonList, numberBox);
 }
 
-function numberButtonLayout(numberButtonList, numberBox) {
-    /* there is a specific order to appending so that the numbers wrap to look like a numpad */
-    numberBox.appendChild(numberButtonList[7]);
-    numberBox.appendChild(numberButtonList[8]);
-    numberBox.appendChild(numberButtonList[9]);
-    numberBox.appendChild(numberButtonList[4]);
-    numberBox.appendChild(numberButtonList[5]);
-    numberBox.appendChild(numberButtonList[6]);
-    numberBox.appendChild(numberButtonList[1]);
-    numberBox.appendChild(numberButtonList[2]);
-    numberBox.appendChild(numberButtonList[3]);
-    numberBox.appendChild(numberButtonList[10]);
-    numberBox.appendChild(numberButtonList[0]);
-    numberBox.appendChild(numberButtonList[11]);
-
-    numberButtonList.forEach(numberButton => {
-        numberButton.addEventListener('click', function(e) {
-            if(numberButton.textContent == '=') {
-                doTheMath();
-            } else {
-                updateDisplay(this);
-            }
-        });
-    });
+function addToNumber(numToFill, addVal) {
+    if (checkDecimals(numToFill)) {
+        numToFill == 'one' ? num1 += addVal : num2 += addVal;
+        displayFunction.textContent = num1 + operator + num2;
+    } else {
+        return;
+    }
 }
 
-function operatorButtons(operatorBox) {
-    let addButton = document.createElement('button');
-    addButton.classList.add('operatorButton');
-    addButton.textContent = '+';
-    operatorBox.appendChild(addButton);
-    addButton.addEventListener('click', function(e) {
-        operation = 'add';
-        updateDisplay(this);
-    });
-
-    let minusButton = document.createElement('button');
-    minusButton.classList.add('operatorButton');
-    minusButton.textContent = '-';
-    operatorBox.appendChild(minusButton);
-    minusButton.addEventListener('click', function(e) {
-        operation = 'subtract';
-        updateDisplay(this);
-    });
-
-    let multButton = document.createElement('button');
-    multButton.classList.add('operatorButton');
-    multButton.textContent = 'x';
-    operatorBox.appendChild(multButton);
-    multButton.addEventListener('click', function(e) {
-        operation = 'multiply';
-        updateDisplay(this);
-    });
-
-    let divButton = document.createElement('button');
-    divButton.classList.add('operatorButton');
-    divButton.textContent = '/';
-    operatorBox.appendChild(divButton);
-    divButton.addEventListener('click', function(e) {
-        operation = 'divide';
-        updateDisplay(this);
-    });
+function checkDecimals(numCheck) {
+    let i, j;
+    if (numCheck == 'one') {
+        if (num1.includes('.')) {
+            i = num1.length;
+            j = num1.indexOf('.');
+            return (i - j < 4) ? true : false; /* true = decimals can be added */
+        } else {
+            return true;
+        }
+    } else {
+        if (num2.includes('.')) {
+            i = num2.length;
+            j = num2.indexOf('.');
+            return (i - j < 4) ? true : false;
+        } else { return true; }
+    }
 }
 
-function doTheMath() {
-    console.log(evalString);
+function evaluate() {
+    if (num1 && num2) {
+        switch (operator) {
+            case '+':
+                add(+num1, +num2);
+                break;
+            case '-':
+                subtract(+num1, +num2);
+                break;
+            case '*':
+                multiply(+num1, +num2);
+                break;
+            case '/':
+                divide(+num1, +num2);
+                break;
+        }
+        displayResult.textContent = result;
+        resultBridge();
+    } else {
+        result = 'Use 2 numbers & an operator';
+        displayResult.textContent = result;
+    }
 }
 
-function updateDisplay(e) {
-    functionDisplay.textContent += e.textContent;
-    resultBox.append(functionDisplay);
-    evalString = functionDisplay.textContent;
+function add(a, b) {
+    result = a + b;
+};
+
+function subtract(a, b) {
+    result = a - b;
+};
+
+function multiply(a, b) {
+    result = a * b;
+};
+
+function divide(a, b) {
+    if (b == 0) {
+        result = 'ERROR';
+    } else {
+        result = a / b
+        result = Math.round(result * 1000) / 1000;
+    }
+};
+
+function resultBridge() {
+    numberButtons.forEach(numberButton => numberButton.addEventListener('click', clearAllEquation));
+    operatorButtons.forEach(operatorButton => operatorButton.addEventListener('click', useResultInCalc));
 }
 
-function clearCurrent() {
-    functionDisplay.textContent = '';
-    resultBox.appendChild(functionDisplay);
+function clearAllEquation(element) {
+    result = '';
+    displayResult.textContent = result;
+    staticFunction = '';
+    num1 ='';
+    num2 = '';
+    operator = '';
+    stringIterator = this.textContent;
+    addToNumber('one', stringIterator);
+    numberButtons.forEach(numberButton => numberButton.removeEventListener('click', clearAllEquation));
+    operatorButtons.forEach(operatorButton => operatorButton.removeEventListener('click', useResultInCalc));
 }
 
-function clearAllNums() {
-    console.log('The C button works too');
+function useResultInCalc(element) {
+    num1 = result;
+    num2 = '';
+    operator = this.textContent;
+    result = '';
+    displayResult.textContent = '';
+    displayFunction.textContent = num1 + operator + num2;
+    staticFunction = '';
+    numberButtons.forEach(numberButton => numberButton.removeEventListener('click', clearAllEquation));
+    operatorButtons.forEach(operatorButton => operatorButton.removeEventListener('click', useResultInCalc));
+}
+
+function clearAll() {
+    result = '';
+    displayResult.textContent = result;
+    staticFunction = '';
+    num1 = '';
+    num2 = '';
+    operator = '';
+    stringIterator = '';
+    initializeButtons();
+}
+
+function clearElement() {
+    if(num2) {
+        num2 = '';
+    } else if(operator) {
+        operator = '';
+    } else {
+        num1 = '';
+    }
+    displayFunction.textContent = num1 + operator + num2;
+}
+
+document.addEventListener('keydown', keyPress);
+
+function keyPress(element) {
+    let operatorList = ['+', '-', '*', '/'];
+    if(!isNaN(element.key) || element.key == '.') {
+        document.getElementById(`${element.key}`).click();
+    } else if (operatorList.includes(element.key)) {
+        operator = `${element.key}`;
+        displayFunction.textContent = num1 + operator + num2;
+    } else if (element.key === 'c' || element.key === 'C') {
+        clearAll();
+    } else if (element.key === '=' || element.key === 'Enter') {
+        evaluate();
+    } else if (element.key === 'Backspace') {
+        clearElement();
+    }
 }

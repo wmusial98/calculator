@@ -11,3 +11,9 @@ It bothered me a bit that The Odin Project skimmed over creating and managing js
 
 ## Styling
 Styling is pretty standard - flexbox, a combination of columns in nested divs, and a flex-wrap on the nummber buttons leads to the desired layout. The main difference is that I did all of my content creation with DOM manipulation - hopefully this will not lead to any problems when I am using multiple JS files together. I imported the Raleway font from Google's open source fonts. I noticed that this slows the page down on initial load.
+
+# Second Pass
+I think that creating every HTML element dynamically was a bit ambitious (in nice terms). However, all of the function work I did previously is still the same - this should make navigating the content.js file easier.
+
+## Back to Where I Left Off (And Some)
+At the end of the day of second pass, I was back to where I started with a cleaner file. I was able to implement a check that limited the number of decimal places the user could input before being unable to make more changes, added new logic so I didn't have to split a string to do calculations, and clear buttons. 

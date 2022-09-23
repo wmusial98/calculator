@@ -14,14 +14,17 @@ button {
     border: 0px;
 }
 
-.calculatorBox {
+.calculator {
     height: 435px;
     width: 535px;
     margin: auto;
     border: 1px solid;
+    display: flex;
+    flex-direction: column;
+    width: 530px;
 }
 
-.clearButton {
+.clear {
     width: 70px;
     height: 160px;
     background-color: #CDDECF;
@@ -41,29 +44,23 @@ button {
     border: 0px;
 }
 
-.calcBox {
-    display: flex;
-    flex-direction: column;
-    width: 530px;
-}
-
-.resultBox{
+.result {
     width: 515px;
     height: 70px;
     background-color: lightgray;
     margin: 10px 5px 5px 10px;
 }
 
-.functionMsg, .resultMsg {
+.displayFunction, .displayResult {
     text-align: right;
     margin: 3px;
 }
 
-.resultMsg {
+.displayResult {
     font-size: 32px;
 }
 
-.buttonBox {
+.input {
     display: flex;
 }
 

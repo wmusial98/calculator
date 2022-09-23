@@ -3,21 +3,15 @@ const { beforeAll } = require("@jest/globals"); */
 
 let result = 0;
 
-const operate = function () {
-    let a = prompt('First number!');
-    let b = prompt('Second number');
-    let operator = prompt('Add, subtract, multiply, or divide?');
+const operate = function (first, second) {
     if (operator == 'add') {
-        add(+a,+b);
+        add(+first,+second);
     } else if (operator == 'subtract') {
-        subtract(+a,+b);
+        subtract(+first,+second);
     } else if (operator == 'multiply') {
-        multiply(+a,+b);
-    } else if (operator == 'divide') {
-        divide(+a,+b);
-    } else {
-        alert('Select a valid operator');
-        operate();
+        multiply(+first,+second);
+    } else (operator == 'divide') {
+        divide(+first,+second);
     }
 }
 
